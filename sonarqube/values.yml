@@ -1,0 +1,122 @@
+deploymentType: "StatefulSet"
+	replicaCount: 1
+	deploymentStrategy: {}
+	
+	image:
+	  repository: sonarqube
+	  tag: 9.4.0-{{ .Values.edition }}
+	  pullPolicy: IfNotPresent
+	  pullSecrets:
+	    - name: my-repo-secret
+	
+	# Set security context for sonarqube pod
+	securityContext:
+	  fsGroup: 1000
+	
+	# Set security context for sonarqube container
+	containerSecurityContext:
+	  # Sonarqube dockerfile creates sonarqube user as UID and GID 1000
+	  runAsUser: 1000
+	
+	# Settings to configure elasticsearch host requirements
+	elasticsearch:
+	  # DEPRECATED: Use initSysctl.enabled instead
+	  configureNode: true
+	  bootstrapChecks: true
+	
+	service:
+	  type: ClusterIP
+	  externalPort: 9000
+	  internalPort: 9000
+	  labels:
+	  annotations: {}
+	
+	# Optionally create Network Policies
+	networkPolicy:
+	  enabled: false
+	
+	# also install the nginx ingress helm chart
+	nginx:
+	  enabled: false
+	
+	ingress:
+	  enabled: false
+	  # Used to create an Ingress record.
+	  hosts:
+	    - name: sonarqube.your-org.com
+	      path: /
+	  annotations: {}
+	
+	route:
+	  enabled: false
+	  host: ""
+	  tls:
+	    termination: edge
+	
+	readinessProbe:
+	  initialDelaySeconds: 60
+	  periodSeconds: 30
+	  failureThreshold: 6
+	  sonarWebContext: /
+	
+	livenessProbe:
+	  initialDelaySeconds: 60
+	  periodSeconds: 30
+	  failureThreshold: 6
+	  sonarWebContext: /
+	
+	startupProbe:
+	  initialDelaySeconds: 30
+	  periodSeconds: 10
+	  failureThreshold: 24
+	  sonarWebContext: /
+	
+	initContainers:
+	  resources: {}
+	
+	jvmOpts: ""
+	jvmCeOpts: ""
+	
+	## Adjust these values to your needs, but make sure that the memory limit is never under 4 GB
+	resources:
+	  limits:
+	    cpu: 800m
+	    memory: 4Gi
+	  requests:
+	    cpu: 400m
+	    memory: 2Gi
+	
+	persistence:
+	  enabled: false
+	  ## Set annotations on pvc
+	  annotations: {}
+	
+	  storageClass:
+	  accessMode: ReadWriteOnce
+	  size: 5Gi
+	  uid: 1000
+	
+	apiVersion: v1
+	kind: ConfigMap
+	metadata:
+	  name: external-sonarqube-opts
+	data:
+	  SONARQUBE_JDBC_USERNAME: foo
+	  SONARQUBE_JDBC_URL: jdbc:postgresql://db.example.com:5432/sonar
+	
+	#
+	account:
+	  adminPassword: admin
+	  currentAdminPassword: admin
+	  securityContext: {}
+	  resources:
+	    limits:
+	      cpu: 100m
+	      memory: 128Mi
+	    requests:
+	      cpu: 100m
+	      memory: 128Mi
+	
+	sonarWebContext: /
+	
+	terminationGracePeriodSeconds: 60
