@@ -1,58 +1,58 @@
 global:
-	  joinKeySecretName: joinkey-secret
-	  masterKeySecretName: masterkey-secret
-	
-	artifactory:
-	  persistence:
-	    type: aws-s3-v3
-	    awsS3V3:
-	      identity: yourIdentity
-	      credential: yourIdentity
-	      region: usw2
-	      bucketName: artifactory-aws
-	      path: artifactory/filestore
-	      Endpoint: AWS_S3_ENDPOINT
-	  primary:
-	    resources:
-	      requests:
-	        memory: "4Gi"
-	        cpu: "2"
-	      limits:
-	        memory: "8Gi"
-	        cpu: "6"
-	    javaOpts:
-	      xms: "4g"
-	      xmx: "6g"
-	
-	  node:
-	    replicaCount: 2
-	    resources:
-	      requests:
-	        memory: "4Gi"
-	        cpu: "2"
-	      limits:
-	        memory: "8Gi"
-	        cpu: "6"
-	    javaOpts:
-	      xms: "4g"
-	      xmx: "6g"
-	
-	postgresql:
-	  enabled: true
-	  postgresqlUsername: artifactory
-	  postgresqlPassword: password
-	  postgresqlDatabase: artifactory
-	  postgresqlExtendedConf:
-	    maxConnections: 1000
-	
-	nginx:
-	  enabled: true
-	  tlsSecretName: artifactory-tls
-	  replicaCount: 2
-	  resources:
-	    requests:
-	      cpu: 100m
-	      memory: 250Mi
-	    limits:
-	      cpu: 250m
-	      memory: 500Mi
+  joinKeySecretName: joinkey-secret
+  masterKeySecretName: masterkey-secret
+
+artifactory:
+  persistence:
+    type: aws-s3-v3
+    awsS3V3:
+      identity: yourIdentity
+      credential: yourIdentity
+      region: usw2
+      bucketName: artifactory-aws
+      path: artifactory/filestore
+      Endpoint: AWS_S3_ENDPOINT
+  primary:
+    resources:
+      requests:
+        memory: "4Gi"
+        cpu: "2"
+      limits:
+        memory: "8Gi"
+        cpu: "6"
+    javaOpts:
+      xms: "4g"
+      xmx: "6g"
+
+  node:
+    replicaCount: 2
+    resources:
+      requests:
+        memory: "4Gi"
+        cpu: "2"
+      limits:
+        memory: "8Gi"
+        cpu: "6"
+    javaOpts:
+      xms: "4g"
+      xmx: "6g"
+
+postgresql:
+  enabled: true
+  postgresqlUsername: artifactory
+  postgresqlPassword: password
+  postgresqlDatabase: artifactory
+  postgresqlExtendedConf:
+    maxConnections: 1000
+
+nginx:
+  enabled: true
+  tlsSecretName: artifactory-tls
+  replicaCount: 2
+  resources:
+    requests:
+      cpu: 100m
+      memory: 250Mi
+    limits:
+      cpu: 250m
+      memory: 500Mi
